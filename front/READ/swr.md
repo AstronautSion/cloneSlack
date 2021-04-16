@@ -28,13 +28,16 @@ import useSWR from 'swr';
 import fetcher from './utils/fetcher';
 
 // revalidate() : 선언하여 내가 원하는 곳에서 다시 호출 시킬 수 있음.
-const { data, error, revalidate } = useSWR('url주소', fetcher, {
+// mutate : 서버에 요청하지 않고 수정. ( data, shouldRevalidate)
+const { data, error, revalidate, mutate } = useSWR('url주소', fetcher, {
   dedupingInterval: 100000,
   // 주기적으로 호출은 되지만 dedupingInterval 기간 내에는 캐시에서 불러온다.
   // 그 외 자주쓰는거
   // loadingTimeout: 3000, 요청하고 로딩시간 지정
   // errorRetryInterval: 5000, 요청했는데 에러가 났을때 재요청 시간
   // errorRetryCount: 최대 몇번까지 요청할건지 설정 그 이 후엔 에러
+  revalidate();
+  mutate(data, false); // true로 변경시 Optimistic UI 적용됨
 });
 ```
 
