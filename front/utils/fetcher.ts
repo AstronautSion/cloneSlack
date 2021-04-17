@@ -7,7 +7,6 @@ const fetcher = (url: string) => {
       withCredentials: true,
     })
     .then((response) => {
-      console.log(response);
       return response.data;
     });
 };

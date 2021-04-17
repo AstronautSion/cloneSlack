@@ -7,7 +7,7 @@ import { Link, Redirect } from 'react-router-dom';
 import useSWR from 'swr';
 
 const LogIn = () => {
-  const { data, error, revalidate, mutate } = useSWR('http://localhost:3095/api/users', fetcher);
+  const { data, error, revalidate, mutate } = useSWR('/api/users', fetcher);
   const [logInError, setLogInError] = useState(false);
   const [email, onChangeEmail] = useInput('');
   const [password, onChangePassword] = useInput('');
@@ -16,13 +16,7 @@ const LogIn = () => {
       e.preventDefault();
       setLogInError(false);
       axios
-        .post(
-          'http://localhost:3095/api/users/login',
-          { email, password },
-          {
-            withCredentials: true,
-          },
-        )
+        .post('/api/users/login', { email, password })
         .then((response) => {
           // revalidate();
           mutate(response.data, false);
@@ -39,13 +33,13 @@ const LogIn = () => {
   }
 
   if (data) {
-    return <Redirect to="/workspace/channel" />;
+    return <Redirect to="/workspace/cslack/channel/일반" />;
   }
 
   // console.log(error, userData);
   // if (!error && userData) {
   //   console.log('로그인됨', userData);
-  //   return <Redirect to="/workspace/slack/channel/일반" />;
+  //   return <Redirect to="/workspace/cslack/channel/일반" />;
   // }
 
   return (
