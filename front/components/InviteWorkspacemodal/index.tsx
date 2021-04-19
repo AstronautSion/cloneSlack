@@ -18,10 +18,11 @@ const InviteWorkspaceModal: FC<Props> = ({ show, onCloseModal, setShowInviteWork
   const { workspace } = useParams<{ workspace: string; channel: string }>();
   const [newMember, onChangeNewMember, setNewMember] = useInput('');
   const { data: userData } = useSWR<IUser>('/api/users', fetcher);
-  const { revalidate: revalidateMember } = useSWR<IUser[]>(
+  const { revalidate: revalidateMember } = useSWR<IChannel[]>(
     userData ? `/api/workspaces/${workspace}/members` : null,
     fetcher,
   );
+
   const onInviteMember = useCallback(
     (e) => {
       e.preventDefault();
@@ -32,7 +33,7 @@ const InviteWorkspaceModal: FC<Props> = ({ show, onCloseModal, setShowInviteWork
         .post(`/api/workspaces/${workspace}/members`, {
           email: newMember,
         })
-        .then(() => {
+        .then((response) => {
           revalidateMember();
           setShowInviteWorkspaceModal(false);
           setNewMember('');
@@ -50,7 +51,7 @@ const InviteWorkspaceModal: FC<Props> = ({ show, onCloseModal, setShowInviteWork
       <form onSubmit={onInviteMember}>
         <Label id="member-label">
           <span>이메일</span>
-          <Input id="channel" value={newMember} onChange={onChangeNewMember} />
+          <Input id="member" type="email" value={newMember} onChange={onChangeNewMember} />
         </Label>
         <Button type="submit">초대하기</Button>
       </form>

@@ -12,7 +12,7 @@ npm i socket.io-client@2
 npm i -D @types/socket.io-client
 ```
 
-## socket.on
+## socket.on && off
 
 서버에서 클라이언트로 보내는 이벤트 (클라이언트에서는 on으로 받음)
 
@@ -20,6 +20,8 @@ npm i -D @types/socket.io-client
 socket.on('data', (data) => {
   console.log(data);
 });
+
+socket.off('data');
 ```
 
 ## socket.emit
@@ -37,3 +39,33 @@ socket.disconnect();
 ```
 
 클라이언트에서 소켓 연결을 종료하는 함수
+
+## useSocket hoos
+
+```js
+import io from 'socket.io-client';
+import { useCallback } from 'react';
+
+const backUrl = 'http://localhost:3095';
+const sockets: { [key: string]: SocketIOClient.Socket } = {};
+const useSocket = (workspace?: string): [SocketIOClient.Socket | undefined, () => void] => {
+  const disconnect = useCallback(() => {
+    if (workspace) {
+      sockets[workspace].disconnect();
+      delete sockets[workspace];
+    }
+  }, [workspace]);
+
+  if (!workspace) {
+    return [undefined, disconnect];
+  }
+
+  sockets[workspace] = io.connect(`${backUrl}/ws-${workspace}`, {
+    transports: ['websocket'],
+  });
+
+  return [sockets[workspace], disconnect];
+};
+
+export default useSocket;
+```

@@ -1,3 +1,4 @@
+import useSocket from '@hooks/useSocket';
 import { CollapseButton } from '@components/DMList/styles';
 import { IUser, IUserWithOnline } from '@typings/db';
 import fetcher from '@utils/fetcher';
@@ -18,6 +19,7 @@ const DMList: FC = () => {
 
   const [channelCollapse, setChannelCollapse] = useState(false);
   const [onlineList, setOnlineList] = useState<number[]>([]);
+  const [socket, disconnect] = useSocket(workspace);
 
   const toggleChannelCollapse = useCallback(() => {
     setChannelCollapse((prev) => !prev);
@@ -27,6 +29,19 @@ const DMList: FC = () => {
     console.log('DMList: workspace 바꼈다', workspace);
     setOnlineList([]);
   }, [workspace]);
+
+  useEffect(() => {
+    socket?.on('onlineList', (data: number[]) => {
+      setOnlineList(data);
+    });
+    // socket?.on('dm', onMessage);
+    // console.log('socket on dm', socket?.hasListeners('dm'), socket);
+    return () => {
+      // socket?.off('dm', onMessage);
+      // console.log('socket off dm', socket?.hasListeners('dm'));
+      socket?.off('onlineList');
+    };
+  }, [socket]);
 
   return (
     <>
