@@ -1,5 +1,5 @@
 import useInput from '@hooks/useInput';
-import { Success, Form, Error, Label, Input, LinkContainer, Button, Header } from '@pages/SignUp/styles';
+import { Form, Error, Label, Input, LinkContainer, Button, Header } from '@pages/SignUp/styles';
 import fetcher from '@utils/fetcher';
 import axios from 'axios';
 import React, { useCallback, useState } from 'react';
@@ -7,7 +7,7 @@ import { Link, Redirect } from 'react-router-dom';
 import useSWR from 'swr';
 
 const LogIn = () => {
-  const { data, error, revalidate, mutate } = useSWR('/api/users', fetcher);
+  const { data, revalidate } = useSWR('/api/users', fetcher);
   const [logInError, setLogInError] = useState(false);
   const [email, onChangeEmail] = useInput('');
   const [password, onChangePassword] = useInput('');
@@ -35,12 +35,6 @@ const LogIn = () => {
   if (data) {
     return <Redirect to="/workspace/sleact/channel/일반" />;
   }
-
-  // console.log(error, userData);
-  // if (!error && userData) {
-  //   console.log('로그인됨', userData);
-  //   return <Redirect to="/workspace/cslack/channel/일반" />;
-  // }
 
   return (
     <div id="container">

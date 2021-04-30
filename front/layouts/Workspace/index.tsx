@@ -5,7 +5,7 @@ import InviteWorkspaceModal from '@components/InviteWorkspaceModal';
 import Menu from '@components/Menu';
 import Modal from '@components/Modal';
 import useInput from '@hooks/useInput';
-
+import useSocket from '@hooks/useSocket';
 import {
   AddButton,
   Channels,
@@ -34,7 +34,6 @@ import useSWR from 'swr';
 import gravatar from 'gravatar';
 import { toast } from 'react-toastify';
 import CreateChannelModal from '@components/CreateChannelModal';
-import useSocket from '@hooks/useSocket';
 
 const Channel = loadable(() => import('@pages/Channel'));
 const DirectMessage = loadable(() => import('@pages/DirectMessage'));
@@ -59,10 +58,10 @@ const Workspace: VFC = () => {
 
   useEffect(() => {
     if (channelData && userData && socket) {
+      console.log(socket);
       socket.emit('login', { id: userData.id, channels: channelData.map((v) => v.id) });
     }
   }, [socket, channelData, userData]);
-
   useEffect(() => {
     return () => {
       disconnect();
@@ -170,7 +169,7 @@ const Workspace: VFC = () => {
         <Workspaces>
           {userData?.Workspaces.map((ws) => {
             return (
-              <Link key={ws.id} to={`/workspace/${123}/channel/일반`}>
+              <Link key={ws.id} to={`/workspace/${ws.url}/channel/일반`}>
                 <WorkspaceButton>{ws.name.slice(0, 1).toUpperCase()}</WorkspaceButton>
               </Link>
             );
