@@ -40,7 +40,7 @@ socket.disconnect();
 
 클라이언트에서 소켓 연결을 종료하는 함수
 
-## useSocket hoos
+## useSocket hooks
 
 ```js
 import io from 'socket.io-client';
